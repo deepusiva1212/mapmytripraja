@@ -21,6 +21,9 @@ export const BRAND_COLORS = {
   mist: '#FAF6EF',      // Light surface background
 };
 
+// Alias export to satisfy components importing BRAND directly
+export const BRAND = BRAND_COLORS;
+
 export const CATEGORY_TO_TYPES = {
   all: ['attraction', 'hotel', 'food', 'cab'],
   attractions: ['attraction'],
