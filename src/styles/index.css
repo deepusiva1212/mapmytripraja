@@ -1,8 +1,8 @@
+@import "maplibre-gl/dist/maplibre-gl.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "maplibre-gl/dist/maplibre-gl.css";
 
 /* Reset page layout to fill full screen */
 html, body, #root {
