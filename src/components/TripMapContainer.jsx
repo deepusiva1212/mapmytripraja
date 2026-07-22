@@ -97,6 +97,26 @@ export default function TripMapContainer() {
     );
   }
 
+  const handleLocationSearch = async (searchValue) => {
+    if (!searchValue) return;
+    try {
+      const response = await fetch(
+        `https://api.maptiler.com/geocoding/${searchValue}.json?key=${MAPBOX_TOKEN}`
+      );
+      const data = await response.json();
+      if (data.features && data.features.length > 0) {
+        const [longitude, latitude] = data.features[0].center;
+        mapRef.current?.flyTo({
+          center: [longitude, latitude],
+          zoom: 13,
+          duration: 2000, 
+        });
+      }
+    } catch (error) {
+      console.error("Geocoding search failed:", error);
+    }
+  };
+
   return (
     <div className="relative h-full w-full overflow-hidden font-sans">
       <Map
@@ -167,11 +187,12 @@ export default function TripMapContainer() {
         )}
       </Map>
 
-      <FilterBar
-        query={query}
-        onQueryChange={setQuery}
-        activeCategory={category}
-        onCategoryChange={setCategory}
+      <FilterBar 
+        query={searchQuery} 
+        onQueryChange={setSearchQuery} 
+        activeCategory={activeCategory} 
+        onCategoryChange={setActiveCategory} 
+        onSearch={handleLocationSearch} 
       />
 
       <MapControls
