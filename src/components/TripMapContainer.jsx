@@ -99,15 +99,29 @@ export default function TripMapContainer() {
     );
   }
 
-  const handleLocationSearch = async (searchValue) => {
+ const handleLocationSearch = async (searchValue) => {
     if (!searchValue) return;
+    
     try {
+      // Safely encode the text (so cities with spaces don't break the URL)
+      const encodedQuery = encodeURIComponent(searchValue);
+      
+      // Use your exact, clean MapTiler key directly
       const response = await fetch(
-        `https://api.maptiler.com/geocoding/${searchValue}.json?key=${MAPBOX_TOKEN}`
+        `https://api.maptiler.com/geocoding/${encodedQuery}.json?key=ge11lx0GgY7yfRIuYyvB`
       );
+      
+      // Safety net: If MapTiler rejects the request, stop gracefully
+      if (!response.ok) {
+        console.error("MapTiler rejected the search:", await response.text());
+        return; 
+      }
+
       const data = await response.json();
+      
       if (data.features && data.features.length > 0) {
         const [longitude, latitude] = data.features[0].center;
+        
         mapRef.current?.flyTo({
           center: [longitude, latitude],
           zoom: 13,
@@ -190,10 +204,10 @@ export default function TripMapContainer() {
       </Map>
 
       <FilterBar 
-        query={searchQuery} 
-        onQueryChange={setSearchQuery} 
-        activeCategory={activeCategory} 
-        onCategoryChange={setActiveCategory} 
+        query={query} 
+        onQueryChange={setQuery} 
+        activeCategory={category} 
+        onCategoryChange={setCategory} 
         onSearch={handleLocationSearch} 
       />
 
